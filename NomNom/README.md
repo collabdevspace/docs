@@ -20,7 +20,11 @@ A comprehensive platform for ordering, processing, and delivering food items to 
 
 ## Contributing
 
-[Contribution guidelines coming soon]
+1. UML diagrams -
+	1. Use 'https://www.plantuml.com' to create/edit the uml diagrams.
+	2. Take screenshot of the diagram and save it in the respective diagram folder, along with the uml file.
+
+[Additional contribution guidelines coming soon]
 
 ## License
 

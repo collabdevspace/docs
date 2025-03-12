@@ -1,0 +1,41 @@
+@startuml
+title Food Delivery App - Component Diagram
+
+' Define components
+component "Customer UI" as UI
+component "API Gateway" as APIGateway
+component "Authentication & Authorization Service" as Auth
+component "Order Service" as OrderService
+component "Order Processing Service" as OrderProcessing
+component "Inventory Management Service" as Inventory
+component "Payment Management Service" as Payment
+component "Delivery & Tracking Service" as DeliveryTracking
+component "Delivery Agent Service" as DeliveryAgent
+component "Notification Service" as Notification
+
+' Interactions between the UI and backend services via the gateway
+UI --> APIGateway : REST/GraphQL calls
+
+' API Gateway interactions with core services
+APIGateway <--> Auth : Validate token / sign in
+APIGateway --> OrderService : Place & manage orders
+
+' Order Service kicks off order processing flow
+OrderService --> OrderProcessing : Trigger workflow
+
+' Order Processing service coordinates actions
+OrderProcessing <--> Inventory : Verify item availability
+OrderProcessing <--> Payment : Initiate payment
+OrderProcessing --> DeliveryTracking : Start delivery tracking
+OrderProcessing --> Notification : Publish order status updates
+
+' Delivery Tracking assigns agents
+DeliveryTracking --> DeliveryAgent : Assign delivery personnel
+
+' Optionally, Delivery Agent service reports status updates
+DeliveryAgent --> Notification : Send update notifications
+
+' Notification service client (customer UI) with respective updates
+Notification --> UI : Order Updates
+
+@enduml
