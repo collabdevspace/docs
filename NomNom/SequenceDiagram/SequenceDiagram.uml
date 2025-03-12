@@ -1,0 +1,46 @@
+@startuml
+
+title Order Placement Sequence Diagram
+
+actor Customer
+
+participant UI as "Customer UI"
+participant APIGateway as "API Gateway"
+participant Auth as "Auth Service"
+participant OrderService as "Order Service"
+participant OrderProcessing as "Order Processing"
+participant Inventory as "Inventory Service"
+participant Payment as "Payment Service"
+participant DeliveryTracking as "Delivery & Tracking Service"
+participant DeliveryAgent as "Delivery Agent Service"
+participant Notification as "Notification Service"
+
+Customer -> UI: Place Order
+UI -> APIGateway: HTTP Request (Place Order)
+APIGateway -> Auth: Validate token/credentials
+Auth --> APIGateway: Token valid
+APIGateway -> OrderService: Create order
+OrderService -> OrderProcessing: Trigger workflow for order
+
+' Check order details and availability
+OrderProcessing -> Inventory: Check & reserve items
+Inventory --> OrderProcessing: Items available
+
+' Process payment for order
+OrderProcessing -> Payment: Process payment
+Payment --> OrderProcessing: Payment confirmed
+
+' Initiate delivery process
+OrderProcessing -> DeliveryTracking: Start tracking
+DeliveryTracking -> DeliveryAgent: Assign delivery agent
+DeliveryAgent --> DeliveryTracking: Agent assigned
+
+' Send confirmation notifications
+OrderProcessing -> Notification: Publish order confirmed
+Notification -> UI: Notify customer: Order confirmed
+
+OrderProcessing --> OrderService: Workflow completed
+OrderService --> APIGateway: Order ID, status, details
+APIGateway -> UI: HTTP Response with order details
+
+@enduml
